@@ -76,13 +76,20 @@ a simulare il comportamento del sensore.
 Questo applicativo ha come obiettivo la generazione di triple RDF in ordine ad un sensore la cui struttura è già stata definita all'interno dell'ontologia di KM4City.
 La generazione dei dati avviene a partire da un file di configurazione all'interno del quale sono definite, per ogni tripla che deve essere generata, le specifiche del sensore in modo che 
 la tripla d'uscita sia conforme con la struttura dell'ontologia.\\
-L'applicazione dunque cicla sui sensori, sui quali voglio effettuare la simulazione, e per ognuno di essi genera un set di triple il cui valori sono calcolati in 
-base alle specifiche definite all'interno del file di configurazione.\\
+L'applicazione dunque a partire da un insieme di sensori dei quali si vuole
+ottenre una simulazione, genera per ognuno di essi un set di triple i cui valori sono calcolati in base alle specifiche definite all'interno 
+del file di configurazione.\\
 \subsection{Le Triple RDF}
 Gli applicativi di KM4City utilizzano come fonte di dati file di tipo \emph{.n3}, ubicati all'interno di una specifica alberatura di cartelle, 
 contenenti la rilevazione ad un certo istante di tempo di un intero set di sensori (tutti appartenenti alla solita classe).
 
 %esempio di triple rdf 
+
+Nell'immagine d'esempio sono mastrati due esempi di simulazioni relativi a dei
+sensori di parcheggio. Ogni processo di simulazione genera un blocco di triple
+per ogni sensore appartenente ad un set predefinito (la lista dei sensori è il
+risultato di un'interrogazione nella base dati RDF).
+\paragraph{Struttura delle Triple}
 
 \subsection{Il File di Configurazione}
 Il file di configurazione è il file su cui l'applicativo si basa per la generazione delle triple, in relazione ad un generico sensore già definito all'interno
