@@ -67,7 +67,7 @@ Il componente è in grado di generare un set specifico di dati a partire da un s
 la tipologia di dato d'uscita ed il relativo intervallo di variazione.\\
 KM4City si basa su di un'ontologia RDF sulla quale sono definiti i sensori e le informazioni necessarie. Ogni sensore è definito da un insieme di classi e proprietà che
 ne definiscono la struttura.\\
-Tramite il file di configurazione andiamo a definire, sulla base della struttura che il sensore ha all'interno dell'ontologia, il valore delle triple \emph{<soggetto,complemento,oggetto>} che andranno
+Tramite il file di configurazione andiamo a definire, sulla base della struttura che il sensore ha all'interno dell'ontologia, il valore delle triple \emph{<soggetto,predicato,oggetto>} che andranno
 a simulare il comportamento del sensore.
 
 \newpage
@@ -85,11 +85,16 @@ contenenti la rilevazione ad un certo istante di tempo di un intero set di senso
 
 %esempio di triple rdf 
 
-Nell'immagine d'esempio sono mastrati due esempi di simulazioni relativi a dei
-sensori di parcheggio. Ogni processo di simulazione genera un blocco di triple
-per ogni sensore appartenente ad un set predefinito (la lista dei sensori è il
+Nell'immagine d'esempio sono mostrati due esempi di simulazioni relativi a due sensori distinti appartenenti alla solita classe (classe dei sensori di parcheggio). 
+Ogni processo di simulazione genera un blocco di triple per ogni sensore appartenente ad un set predefinito (la lista dei sensori è il
 risultato di un'interrogazione nella base dati RDF).
 \paragraph{Struttura delle Triple}
+Le triple che compongono il file di uscita, come vedremo, hanno tutte la medesima struttura di conseguenza è stato possibile implementare un algoritmo in grado di valorizzare
+i tre parametri della tripla (\emph{soggetto, predicato, oggetto}) in modo automatico, a partire da alcuni parametri iniziali.\\
+Il blocco di triple che descrivono il sensore è composto da classi, attributi della classe e riferimenti ad altre classi.\\
+Nell'esempio è riportato un blocco di triple suddiviso per classi. Ogni classe possiede obbligatoriamente l'attributo \textttt{http://www.w3.org/1999/02/22-rdf-syntax-ns#type} che identifica la classe alla quale appartiene quella risorsa.
+Un altro attributo obbligatorio è \texttt{http://purl.org/dc/terms/identifier} il valore di questo attributo identifica l'id dell'istanza (o risorsa) dell'oggetto della classe in questione.
+Le altre triple della classe si rappresentano proprietà della classe oppure sono riferimenti ad istanze (o risorse) di altre classi.
 
 \subsection{Il File di Configurazione}
 Il file di configurazione è il file su cui l'applicativo si basa per la generazione delle triple, in relazione ad un generico sensore già definito all'interno
