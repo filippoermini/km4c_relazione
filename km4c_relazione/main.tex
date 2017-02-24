@@ -21,6 +21,36 @@
 \usepackage{amsfonts}
 \usepackage{fancyhdr}
 
+%--------------------------------------------------------------
+%definizione formattazione xml 
+%--------------------------------------------------------------
+\usepackage{listings}
+
+\usepackage{color}
+\definecolor{gray}{rgb}{0.4,0.4,0.4}
+\definecolor{darkblue}{rgb}{0.0,0.0,0.6}
+\definecolor{cyan}{rgb}{0.0,0.6,0.6}
+
+\lstset{
+  basicstyle=\ttfamily,
+  columns=fullflexible,
+  showstringspaces=false,
+  commentstyle=\color{gray}\upshape
+}
+
+\lstdefinelanguage{XML}
+{
+  morestring=[b]",
+  morestring=[s]{>}{<},
+  morecomment=[s]{<?}{?>},
+  stringstyle=\color{black},
+  identifierstyle=\color{darkblue},
+  keywordstyle=\color{cyan},
+  morekeywords={xmlns,version,type,encoding,xs:schema,xs:element,xs:complexType,xs:sequence,xs:attribute}
+}
+
+%----------------------------------------------------------------
+
 
 
 \frenchspacing % forza LaTeX ad una spaziatura uniforme, invece di lasciare piÃ¹ spazio
@@ -88,7 +118,7 @@ contenenti la rilevazione ad un certo istante di tempo di un intero set di senso
 Nell'immagine d'esempio sono mostrati due esempi di simulazioni relativi a due sensori distinti appartenenti alla solita classe (classe dei sensori di parcheggio). 
 Ogni processo di simulazione genera un blocco di triple per ogni sensore appartenente ad un set predefinito (la lista dei sensori è il
 risultato di un'interrogazione nella base dati RDF).
-\paragraph{Struttura delle Triple}
+\subsubsection{Struttura delle Triple}
 Le triple che compongono il file di uscita, come vedremo, hanno tutte la medesima struttura di conseguenza è stato possibile implementare un algoritmo in grado di valorizzare
 i tre parametri della tripla (\emph{soggetto, predicato, oggetto}) in modo automatico, a partire da alcuni parametri iniziali.\\
 Il blocco di triple che descrivono il sensore è composto da classi, attributi della classe e riferimenti ad altre classi.\\
@@ -102,16 +132,35 @@ sensore già definito all'interno dell'ontologia.
 Questa simulazione è ottenuta a partire da un file nel quale un utente esperto, cioè un utente che ha un'ampia conoscenza dell'ontologia di \emph{KM4City}, specifica come devono essere valorizzate le proprietà 
 delle classi che definiscono il sensore. Tale file è scritto con la sintassi \emp{XML}.
 
+\subsubsection{Struttura del file XML}
+A seguito è mostrata la struttura gerarchica dei nodi e delle loro proprietà che compongono il file di configurazione.\\
+\paragraph{Tree}
+\`E l'elemento radice ed ha le seguenti proprietà:
+\begin{itemize}
+	\item \textbf{typeId}: \[Obbligatorio\] Il suo valore indica l'\texttt{URI} da usare per indicare la tipologia della classe, in altre parole il valore del complemento della tripla 
+	che deve indicare il tipo della classe.
+	\item \textbf{isStateful} \[Opzionale\] Se true crea un file \emph{json} con tutti i valori dell'ultima esecuzione. Tale file può essere riutilizzato in esecuzioni successive per tenere conto dei valori 
+	precedentemente generati (le specifiche di questa funzionalità sono descritte a seguire nel paragrafo relativo alla tipologia \textbf{previusstate}). 
+\end{itemize}
+\paragraph{FileInfo}
+Questo elemento definisce le specifiche del file di uscita, deve contenere i seguenti elementi:
+\begin{itemize}
+	\item \textbf{FileName} \[Obbligatorio\] Specifica il nome del file \emph{.n3} d'uscita.
+	\item \textbf{StartDirectory} \[Obbligatorio\] \`E la cartella all'interno della quale verranno generati i file risultato della simulazione.
+\end{itemize}
+A partire dalla cartella specificata sarà creata un'alberatura di cartelle con il seguente formato: \emph{AAAA_MM\\GG\\hh\\mmss\\nomefile.n3}.
+
+
 % esempio semplice file n3 e file xml che lo definisce
 % spiegazione di massima dell'esempio
-\paragraph{Variabili e Espressioni Algebriche}
+\subsubsection{Variabili e Espressioni Algebriche}
 Talvolta accade che i valori di alcune proprietà abbiano delle dipendenze da altri valori e che ne si debba tenere conto durante la fase di generazione dei valori, oppure che un 
 determinato valore sia ottenuto tramite un'espressione algebrica.
 I valori che sono generati per le proprietà delle classi sono valori estratti casualmente, anche se ne viene definito l'intervallo all'interno del quale variare, sono pur sempre valori casuali. 
 Quindi per quei valori che sono funzione di altri deve essere introdotta una dipendenza dal valore generato casualmente.\\
 Un esempio è il caso dei sensori dei parcheggi, 
 
-%immagine triple n3
+%immagine triple n3 con dipendenze 
 
 i quali restituiscono informazioni sulle statistiche di utilizzo delle strutture. Il valore principale che deve essere 
 generato casualmente è il \"numero di posto occupati\", di conseguenza valori come numero di posti liberi o e percentuale di occupazione devono essere funzione del valore
@@ -123,8 +172,9 @@ I valori nei quali è inserita una dipendenza funzionale saranno calcolati solo 
 per determinare il valore di alcune proprietà.
 
 %immagine di variabili e aspressioni alegbiche e spiegazione 
- 
-\paragraph{Nodi del file XML}
+
+La generazione dei valori può avvenire in molti modi: per cercare di offrire la maggiore capacità espressiva sono state implementate diverse tipologie di generazione pseudo-casuale 
+dei valori delle proprietà.
  
 \subsection{L'applicativo Java}
 \subsection{Modellazione di Sistemi di Polling attraverso Reti di Petri Stocastiche}
