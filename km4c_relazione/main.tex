@@ -134,7 +134,7 @@ delle classi che definiscono il sensore. Tale file è scritto con la sintassi \e
 
 \subsubsection{Struttura del file XML}
 A seguito è mostrata la struttura gerarchica dei nodi e delle loro proprietà che compongono il file di configurazione.\\
-\paragraph{Tree}
+\paragraph{<tree>}
 \`E l'elemento radice ed ha le seguenti proprietà:
 \begin{itemize}
 	\item \textbf{typeId}: \[Obbligatorio\] Il suo valore indica l'\texttt{URI} da usare per indicare la tipologia della classe, in altre parole il valore del complemento della tripla 
@@ -142,15 +142,60 @@ A seguito è mostrata la struttura gerarchica dei nodi e delle loro proprietà c
 	\item \textbf{isStateful} \[Opzionale\] Se true crea un file \emph{json} con tutti i valori dell'ultima esecuzione. Tale file può essere riutilizzato in esecuzioni successive per tenere conto dei valori 
 	precedentemente generati (le specifiche di questa funzionalità sono descritte a seguire nel paragrafo relativo alla tipologia \textbf{previusstate}). 
 \end{itemize}
-\paragraph{FileInfo}
+\paragraph{<fileInfo>}
 Questo elemento definisce le specifiche del file di uscita, deve contenere i seguenti elementi:
 \begin{itemize}
 	\item \textbf{FileName} \[Obbligatorio\] Specifica il nome del file \emph{.n3} d'uscita.
 	\item \textbf{StartDirectory} \[Obbligatorio\] \`E la cartella all'interno della quale verranno generati i file risultato della simulazione.
 \end{itemize}
-A partire dalla cartella specificata sarà creata un'alberatura di cartelle con il seguente formato: $AAAA_MM$.
+A partire dalla cartella specificata sarà creata un'alberatura di cartelle con il seguente formato: \texttt{AAAA\_MM\textbackslash GG\textbackslash HH\textbackslash mmss\textbackslash filename.n3}.
+Dove i simboli rappresentano i valori di data e e ora.
+\paragraph{<instanceIterationQuery>}
+Elemento per la definizione di una query SPARQL. All'interno di questo elemento si specifica la query SPARQ i cui risultati sono utilizzati rappresentano la lista di sensori sui quali iterare.
+La query deve avere una struttura tale da restituire in uscita una lista di identificativi che rappresentano i sensori per i quali voglio generare delle simulazioni.\\
+Questo elemento non possiede proprietà ma deve aver valorizzati questi elementi:
+\begin{itemize}
+	\item \textbf{query} \[Obbligatorio\] Query sparql
+	\item \textbf{server} \[Obbligatorio\] End-point a cui sottoporre la query
+	\item \textbf{bindingValue} \[Opzionale\]Campo della select su cui andare a recuperare il valore d'uscita (default = id)
+\end{itemize}
+\paragraph{<iterationElement>}
+\`E l'elemento che contiene le definizioni della struttura RDF e le regole di generazione dei valori del sensore. Per ogni elemento generato dalla query si
+rieffettua una generazione dei dati secondo le regole definite all'interno di questo elemento.\\
+All'interno di questo elemento si definiscono quindi le istanze e le proprietà del sensore in accordo con la struttura della base dati RDF.\\
+Questo oggetto contiene 2 tipologie di elementi:
+\begin{itemize}
+	\item \textbf{attributes} [Opzionale] Questo elemento contiene una lista di proprietà che non si riferiscono direttamente alla struttura RDF ma sono degli attributi 
+	di supporto alla generazione dei valori delle proprietà del sensore. Talvolta può accadere che il valore di alcuni attributi sia il risultato di una combinazione di fattori la cui generazione 
+	risulterebbe complicata se eseguita in una sola volta. L'idea che sta alla base dell'utilizzo di questa funzionalità è di poter demandare la generazione di quei valori, il cui risultato è funzione di più elementi,
+	in questa sezione per poi referenziarli nella proprietà opportuna.
+	\item \textbf{list<istance>} [Obbligatorio] Lista delle istanze che definiscono la struttura del sensore. In questa sezione si definiscono le istanze e 
+	le proprietà ad esse associate necessarie a definire l'intero oggetto (sensore) RDF. Le istanze contengono le informazioni necessarie a definire la tripla, inoltre ognuna di esse contiene 
+	una lista di proprietà dove per ognuna di esse sono definite oltre alle informazioni utili a generare la tripla anche le regole di generazione del valore del singolo attributo.
+\end{itemize} 
+\paragraph{<istance>}
+Elemnto che definisce la struttura e gli attributi di un'istanza RDF.\\
+Proprietà:
+\begin{itemize}
+	\item \textt{type}: valore dell'uri \emph{rdf-syntax-ns#type} dell'istanza.
+	\item \textt{name}: nome dell'istanza usato per referenziare l'istanza.
+	\item \textt{isRoot}:se true indica se questa istanza contiene l'emento su cui inserire il valore generato dalla query.
+	\item \textt{baseUri}: valore del \emph{baseURI} dell'istanza.
+\end{itemize}
+Elementi:
+\begin{itemize}
+	\item \textbf{properties} Elemento che contiene la lista di attributi che definiscono l'istanza.
+\end{itemize}
+\paragraph{properties}
+Contiene la lista delle proprietà dell'istanza.
+\begin{itemize}
+	\item \textbf{list<prop>}
+\end{itemize}
 
-
+\paragraph{prop}
+Con questo elemento andiamo a definire le singole proprietà dell'istanza e come esse devono essere generate. Per ognuna di esse sono stati dei campi utili alla generazione dei valori della tripla RDF 
+ed altri campi necessari alla generazione del valore dell'attributo in base al tipo con il quale è stato definito quell'attributo. Come vedremo in seguito è stato definito un set di tipi in cui un a proprietà può essere
+definita, ogni tipo necessita di ulteriori attributi definiti ad hoc per quella tipologia utili alla generazione del valore di uscita.
 % esempio semplice file n3 e file xml che lo definisce
 % spiegazione di massima dell'esempio
 \subsubsection{Variabili e Espressioni Algebriche}
