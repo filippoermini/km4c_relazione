@@ -52,7 +52,6 @@
 %----------------------------------------------------------------
 
 
-
 \frenchspacing % forza LaTeX ad una spaziatura uniforme, invece di lasciare piÃ¹ spazio
 % alla fine dei punti fermi come da convenzione inglese
 \title{\Huge Simulatore dati per Km4City} % \LaTeX è una macro che compone il logo "LaTeX"
@@ -134,32 +133,36 @@ delle classi che definiscono il sensore. Tale file è scritto con la sintassi \e
 
 \subsubsection{Struttura del file XML}
 A seguito è mostrata la struttura gerarchica dei nodi e delle loro proprietà che compongono il file di configurazione.\\
-\paragraph{<tree>}
+
+% esempio semplice file n3 e file xml che lo definisce
+% spiegazione di massima dell'esempio
+
+\paragraph{\large{<tree>}}
 \`E l'elemento radice ed ha le seguenti proprietà:
 \begin{itemize}
-	\item \textbf{typeId}: \[Obbligatorio\] Il suo valore indica l'\texttt{URI} da usare per indicare la tipologia della classe, in altre parole il valore del complemento della tripla 
+	\item \textbf{typeId}: [Obbligatorio] Il suo valore indica l'\texttt{URI} da usare per indicare la tipologia della classe, in altre parole il valore del complemento della tripla 
 	che deve indicare il tipo della classe.
-	\item \textbf{isStateful} \[Opzionale\] Se true crea un file \emph{json} con tutti i valori dell'ultima esecuzione. Tale file può essere riutilizzato in esecuzioni successive per tenere conto dei valori 
+	\item \textbf{isStateful} [Opzionale] Se true crea un file \emph{json} con tutti i valori dell'ultima esecuzione. Tale file può essere riutilizzato in esecuzioni successive per tenere conto dei valori 
 	precedentemente generati (le specifiche di questa funzionalità sono descritte a seguire nel paragrafo relativo alla tipologia \textbf{previusstate}). 
 \end{itemize}
-\paragraph{<fileInfo>}
+\paragraph{\large{<fileInfo>}}
 Questo elemento definisce le specifiche del file di uscita, deve contenere i seguenti elementi:
 \begin{itemize}
-	\item \textbf{FileName} \[Obbligatorio\] Specifica il nome del file \emph{.n3} d'uscita.
-	\item \textbf{StartDirectory} \[Obbligatorio\] \`E la cartella all'interno della quale verranno generati i file risultato della simulazione.
+	\item \textbf{FileName} [Obbligatorio] Specifica il nome del file \emph{.n3} d'uscita.
+	\item \textbf{StartDirectory} [Obbligatorio] \`E la cartella all'interno della quale verranno generati i file risultato della simulazione.
 \end{itemize}
 A partire dalla cartella specificata sarà creata un'alberatura di cartelle con il seguente formato: \texttt{AAAA\_MM\textbackslash GG\textbackslash HH\textbackslash mmss\textbackslash filename.n3}.
 Dove i simboli rappresentano i valori di data e e ora.
-\paragraph{<instanceIterationQuery>}
+\paragraph{\large{<instanceIterationQuery>}}
 Elemento per la definizione di una query SPARQL. All'interno di questo elemento si specifica la query SPARQ i cui risultati sono utilizzati rappresentano la lista di sensori sui quali iterare.
 La query deve avere una struttura tale da restituire in uscita una lista di identificativi che rappresentano i sensori per i quali voglio generare delle simulazioni.\\
 Questo elemento non possiede proprietà ma deve aver valorizzati questi elementi:
 \begin{itemize}
-	\item \textbf{query} \[Obbligatorio\] Query sparql
-	\item \textbf{server} \[Obbligatorio\] End-point a cui sottoporre la query
-	\item \textbf{bindingValue} \[Opzionale\]Campo della select su cui andare a recuperare il valore d'uscita (default = id)
+	\item \textbf{query} [Obbligatorio] Query sparql
+	\item \textbf{server} [Obbligatorio] End-point a cui sottoporre la query
+	\item \textbf{bindingValue} [Opzionale] Campo della select su cui andare a recuperare il valore d'uscita (default = id)
 \end{itemize}
-\paragraph{<iterationElement>}
+\paragraph{\large{<iterationElement>}}
 \`E l'elemento che contiene le definizioni della struttura RDF e le regole di generazione dei valori del sensore. Per ogni elemento generato dalla query si
 rieffettua una generazione dei dati secondo le regole definite all'interno di questo elemento.\\
 All'interno di questo elemento si definiscono quindi le istanze e le proprietà del sensore in accordo con la struttura della base dati RDF.\\
@@ -173,31 +176,76 @@ Questo oggetto contiene 2 tipologie di elementi:
 	le proprietà ad esse associate necessarie a definire l'intero oggetto (sensore) RDF. Le istanze contengono le informazioni necessarie a definire la tripla, inoltre ognuna di esse contiene 
 	una lista di proprietà dove per ognuna di esse sono definite oltre alle informazioni utili a generare la tripla anche le regole di generazione del valore del singolo attributo.
 \end{itemize} 
-\paragraph{<istance>}
-Elemnto che definisce la struttura e gli attributi di un'istanza RDF.\\
+\paragraph{\large{<istance>}}
+Elemento che definisce la struttura e gli attributi di un'istanza RDF.\\
 Proprietà:
 \begin{itemize}
-	\item \textt{type}: valore dell'uri \emph{rdf-syntax-ns#type} dell'istanza.
-	\item \textt{name}: nome dell'istanza usato per referenziare l'istanza.
-	\item \textt{isRoot}:se true indica se questa istanza contiene l'emento su cui inserire il valore generato dalla query.
-	\item \textt{baseUri}: valore del \emph{baseURI} dell'istanza.
+	\item \texttt{type}: valore dell'uri \emph{rdf-syntax-ns\#type} dell'istanza.
+	\item \texttt{name}: nome dell'istanza usato per referenziare l'istanza.
+	\item \texttt{isRoot}:se true indica se questa istanza contiene l'emento su cui inserire il valore generato dalla query.
+	\item \texttt{baseUri}: valore del \emph{baseURI} dell'istanza.
 \end{itemize}
 Elementi:
 \begin{itemize}
-	\item \textbf{properties} Elemento che contiene la lista di attributi che definiscono l'istanza.
+	\item \textbf{properties} [Obbligatorio] Elemento che contiene la lista di attributi che definiscono l'istanza.
 \end{itemize}
-\paragraph{properties}
+\paragraph{\large{<properties>}}
 Contiene la lista delle proprietà dell'istanza.
 \begin{itemize}
-	\item \textbf{list<prop>}
+	\item \textbf{list<prop>} [Obbligatorio]
 \end{itemize}
 
-\paragraph{prop}
+\paragraph{\large{<prop>}}
 Con questo elemento andiamo a definire le singole proprietà dell'istanza e come esse devono essere generate. Per ognuna di esse sono stati dei campi utili alla generazione dei valori della tripla RDF 
 ed altri campi necessari alla generazione del valore dell'attributo in base al tipo con il quale è stato definito quell'attributo. Come vedremo in seguito è stato definito un set di tipi in cui un a proprietà può essere
-definita, ogni tipo necessita di ulteriori attributi definiti ad hoc per quella tipologia utili alla generazione del valore di uscita.
-% esempio semplice file n3 e file xml che lo definisce
-% spiegazione di massima dell'esempio
+definita, ogni tipo necessita di ulteriori attributi definiti ad hoc per quella tipologia utili alla generazione del valore di uscita.\\
+Proprietà:
+\begin{itemize}
+\item \texttt{key}: valore della uri del predicato di quell'attributo.
+\item \texttt{isPrimary}: se \emph{true} indica che quell'attributo è chiave primaria per l'istanza a cui appartiene (solo un attibuto per istanza può essere chiave primaria).
+\end{itemize}
+Elementi:
+\begin{itemize}
+\item \textbf{type} [Obbligatorio]: indica il tipo di valore che deve essere generato (ogni tipo può necessitare elementi aggiuntivi).
+\item \textbf{uri} [Obbligatorio]: valore dell'oggetto della tripla RDF.
+\end{itemize}
+
+\subsubsection{Lista Tipi}
+La generazione dei valori può avvenire in molti modi: per cercare di offrire la maggiore capacità espressiva sono state implementate molteplici tipologie 
+per la generazione pseudo-casuale dei valori delle proprietà.
+Ognuno dei tipi sotto elencati può essere utilizzato come tipo di valore d'uscita per quella specifica proprietà basta specificarlo 
+nell'attributo \emph{type} con a seguito i parametri di cui necessita.\\
+
+\paragraph{\large{id}  Definisce che la proprietà dovrà contenere il valore proveniente dalla query di iterazione, 
+questa proprietà deve essere attribuita all'istanza con \emph{isRoot = true}.\\
+Parametri aggiuntivi: Nessuno
+\paragrapg{\large{integer}} L'attributo restituirà un valore intero generato casualmente in un intervallo.\\
+Parametri aggiuntivi:
+\begin{itemize}
+	\item \texttt{maxValue}: Estremo superiore dell'intervallo.
+	\item \texttt{minValue}: Estremo inferiore dell'intervallo.
+\end{itemize}
+\paragrapg{\large{float}} L'attributo restituirà un valore float generato casualmente in un intervallo.\\
+Parametri aggiuntivi:
+\begin{itemize}
+	\item \texttt{maxValue}: Estremo superiore dell'intervallo.
+	\item \texttt{minValue}: Estremo inferiore dell'intervallo.
+\end{itemize}
+\paragraph{\large{id}  Genera un identificativo univoco\\
+Parametri aggiuntivi: Nessuno
+\paragraph{\large{md5}} Genera il valore md5 di una stringa\\
+Parametri aggiuntivi:
+\begin{itemize}
+	\item \texttt{md5String}: Contiene la stringa da crittografare
+\end{itemize}
+\paragraph{\large{datetime}} Genera una data in formato ISO 8601 se non specificati gli estremi dell'intervallo la data assume il valore dell'istante in cui è generata.\\
+\Paramteri aggiuntivi:
+\begin{itemize}
+	\item \texttt{maxValue}: Estremo superiore dell'intervallo.
+	\item \texttt{minValue}: Estremo inferiore dell'intervallo.
+\end{itemize}
+\paragrapg{\large{hourdependent}} Serve a generare dei valori diversi per ogni ora della giornata, in base ai valori orari di riferimento specificati.
+
 \subsubsection{Variabili e Espressioni Algebriche}
 Talvolta accade che i valori di alcune proprietà abbiano delle dipendenze da altri valori e che ne si debba tenere conto durante la fase di generazione dei valori, oppure che un 
 determinato valore sia ottenuto tramite un'espressione algebrica.
@@ -208,18 +256,16 @@ Un esempio è il caso dei sensori dei parcheggi,
 %immagine triple n3 con dipendenze 
 
 i quali restituiscono informazioni sulle statistiche di utilizzo delle strutture. Il valore principale che deve essere 
-generato casualmente è il \"numero di posto occupati\", di conseguenza valori come numero di posti liberi o e percentuale di occupazione devono essere funzione del valore
+generato casualmente è il \"numero di posti occupati\", di conseguenza valori come numero di posti liberi e percentuale di occupazione devono essere funzione del valore
 casuale generato in precedenza.\\
 Per risolvere questo tipo di problematiche è stata introdotta la possibilità di referenziare valori di proprietà già generati attraverso delle variabili e la possibilità di 
 inserire espressioni algebriche.\\
-Per ogni proprietà definita è necessario specificare un nome, per referenziare quel valore all'interno di altre proprietà si deve utilizzare la seguente sintassi: $\$\{Nome_Proprietà\}$.
+Per ogni proprietà definita è necessario specificare un nome, per referenziare quel valore all'interno di altre proprietà si deve utilizzare la seguente sintassi: \{\emph{Nome\_Proprietà}\}
 I valori nei quali è inserita una dipendenza funzionale saranno calcolati solo dopo aver generato tutte le loro dipendenze e nei casi in cui è necessario sarà possibile eseguire delle espressioni 
 per determinare il valore di alcune proprietà.
 
 %immagine di variabili e aspressioni alegbiche e spiegazione 
 
-La generazione dei valori può avvenire in molti modi: per cercare di offrire la maggiore capacità espressiva sono state implementate diverse tipologie di generazione pseudo-casuale 
-dei valori delle proprietà.
  
 \subsection{L'applicativo Java}
 \end{document}
