@@ -239,12 +239,54 @@ Parametri aggiuntivi:
 	\item \texttt{md5String}: Contiene la stringa da crittografare
 \end{itemize}
 \paragraph{\large{datetime}} Genera una data in formato ISO 8601 se non specificati gli estremi dell'intervallo la data assume il valore dell'istante in cui è generata.\\
-\Paramteri aggiuntivi:
+Parametri aggiuntivi:
 \begin{itemize}
 	\item \texttt{maxValue}: Estremo superiore dell'intervallo.
 	\item \texttt{minValue}: Estremo inferiore dell'intervallo.
 \end{itemize}
 \paragrapg{\large{hourdependent}} Serve a generare dei valori diversi per ogni ora della giornata, in base ai valori orari di riferimento specificati.
+Parametri aggiuntivi:
+\begin{itemize}
+	\item \texttt{hourValue}: Contiene i valori di riferimento per ogni ora, devono essere inseriti 24 valori separati da ';'. 
+	\item \texttt{range}: Contiene il range di variazione all'interno del quale possiamo far variare il valore di riferimento, può essere un
+	valore unico per tutti e 24 i valori oppure può essere definito in modo analogo a hourValue indicando i 24 valori del range.
+\end{itemize}
+\paragraph{\large{profiledependent}} Con questa tipologia, che è concettualmente molto simile alla precedente, è possibile generare il valore di un attributo a partire da un set di profili definiti per specifici giorni della settimana con
+valori di riferimento campionati ad intervalli di 15 minuti. Questi valori sono specificati in 
+
+\paragraph{\large{fromset}} Estrae un valore a caso da un set di elementi (se il set contiene un solo elemento sarà estratto sempre quello).
+Parametri aggiuntivi:
+\begin{itemize}
+	\item \texttt{set} Lista di valori separati da ';'.
+\end{itemize}
+\paragraph{\large{query}} Il valore dell'attributo è il risultato dell'esecuzione di una query (la query deve restituire un solo valore).\\
+\newline
+\emph{Elemento della stessa tipologia di \textbf{instanceIterationQuery}, con la sola differenza che in questo caso la query deve restituire un solo record e non una lista.}\\
+\paragrpah{\large{valueexpression}} Tipologia che permette di definire il valore di un attributo come risultato di una espressione logica o algebrica contenete variabili.
+Parametri aggiuntivi:
+\begin{itemize}
+	\item \texttt{valueExpression} Contiene l'espressione algebrica o logica da eseguire, le variabili devono essere dichiarate con la seguente sintassi \$\{nome\} dove nome è il valore inserito nelle proprietà dell'attributo prop
+\end{itemize}
+\paragraph{\large{foregoing}} Attraverso questa tipologia si può andare a referenziare il valore di una variabile generata in passi precedenti all'interno della solita query di iterazione corrente.\\
+Lo scopo di questa tipologia è di permettere di referenziare all'interno di una iterazione un valore generato per un altro sensore sempre all'interno del solo ciclo di iterazione.\\
+Parametri aggiuntivi:
+\begin{itemize}
+	\item \texttt{defaultValue}: Valore da usare nel caso in cui il valore interessato non sia presente oppure non sia ancora stato generato.
+	\item \texttt{refValue}:contiene la coppia \emph{iterazione - nomeVaribile} da cui prendere il valore. Il valore di iterazione può essere sia un intero, che rappresenta l'indice dell'iterazione 
+	da cui prendere il valore, oppure l'id del sensore da cui prendere il valore interessato che viene specificato con la variabile nomeVariabile il tutto con questa sintassi: \@[iterazione]\{nomeVariabile\}.
+\end{itemize}
+\paragraph{\large{previusstate}} Questa tipologia ha un funzionamento simile alla precedente, solo che in questo caso si può andare a referenziare valori generati in esecuzioni precedenti e non all'interno della solita esecuzione.
+Questa tipologia è utile per generare i valori di quegli attributi che hanno che hanno una dipendenza funzionale da stati precedentemente generati. Per fare in modo di poter utilizzare questa tipologia è necessario che sia settato a true la proprietà 
+\emph{isStateful} nell'elemento \texttt{<tree>}, così facendo il programma creerà un dump, in un file esterno in formato json, delle variabili generate ad ogni esecuzione in modo da poter recuperare il valore interessato e poterlo
+utilizzare nell'iterazione corrente.
+Parametri aggiuntivi:\\
+\begin{itemize}
+	\item \texttt{defaultValue}: Valore da usare nel caso in cui il valore interessato non fosse presente oppure nel caso in cui non esista un'iterazione precedente a quella in oggetto.
+	\item \texttt{refValue}:contiene la tripla \emph{indice - idSensore - nomeVaribile} da cui prendere il valore. L'\texttt{indice} specifica quale iterazione precedentemente generata devo considerare (il conteggio avviene considerando l'iterazione corrente la 0 e la 1 quella precedentemente generata),
+ogni iterazione contiene una lista sensore, quindi è necessario specificare a quale sensore si fa riferimento tramite l'\texttt{idSensore} ed infine è necessario specificare il \texttt{nome} della proprietà che si vuole ottenere.
+La sintassi da utilizzare per definire questa query di ricerca è la seguente: \#[indice][idSensore]\{nomeVariabile\}.\\
+	\end{itemize}
+
 
 \subsubsection{Variabili e Espressioni Algebriche}
 Talvolta accade che i valori di alcune proprietà abbiano delle dipendenze da altri valori e che ne si debba tenere conto durante la fase di generazione dei valori, oppure che un 
@@ -260,7 +302,7 @@ generato casualmente è il \"numero di posti occupati\", di conseguenza valori c
 casuale generato in precedenza.\\
 Per risolvere questo tipo di problematiche è stata introdotta la possibilità di referenziare valori di proprietà già generati attraverso delle variabili e la possibilità di 
 inserire espressioni algebriche.\\
-Per ogni proprietà definita è necessario specificare un nome, per referenziare quel valore all'interno di altre proprietà si deve utilizzare la seguente sintassi: \{\emph{Nome\_Proprietà}\}
+Per ogni proprietà definita è necessario specificare un nome, per referenziare quel valore all'interno di altre proprietà si deve utilizzare la seguente sintassi: \$\{\emph{Nome\_Proprietà}\}
 I valori nei quali è inserita una dipendenza funzionale saranno calcolati solo dopo aver generato tutte le loro dipendenze e nei casi in cui è necessario sarà possibile eseguire delle espressioni 
 per determinare il valore di alcune proprietà.
 
