@@ -97,47 +97,66 @@ la tipologia di dato d'uscita ed il relativo intervallo di variazione.\\
 KM4City si basa su di un'ontologia RDF sulla quale sono definiti i sensori e le informazioni necessarie. Ogni sensore è definito da un insieme di classi e proprietà che
 ne definiscono la struttura.\\
 Tramite il file di configurazione andiamo a definire, sulla base della struttura che il sensore ha all'interno dell'ontologia, il valore delle triple \emph{<soggetto,predicato,oggetto>} che andranno
-a simulare il campionamento del sensore ad un certo istante.
-
-\newpage
-\section{Il Progetto}
-\thispagestyle{plain}
+a simulare il campionamento del sensore ad un certo istante.\\
+\newline
 Questo applicativo ha come obiettivo la generazione di triple RDF in ordine ad un sensore la cui struttura è già stata definita all'interno dell'ontologia di KM4City.
 La generazione dei dati avviene a partire da un file di configurazione all'interno del quale sono definite, per ogni tripla che deve essere generata, le specifiche del sensore in modo che 
 la tripla d'uscita sia conforme con la struttura dell'ontologia.\\
 L'applicazione dunque a partire da un insieme di sensori dei quali si vuole
-ottenre una simulazione, genera per ognuno di essi un set di triple i cui valori sono calcolati in base alle specifiche definite all'interno 
+ottenere una simulazione, genera per ognuno di essi un set di triple i cui valori sono calcolati in base alle specifiche definite all'interno 
 del file di configurazione.\\
-\subsection{Le Triple RDF}
+\newpage
+\section{Le Triple RDF}
 Gli applicativi di KM4City utilizzano come fonte di dati file di tipo \emph{.n3}, ubicati all'interno di una specifica alberatura di cartelle, 
 contenenti la rilevazione ad un certo istante di tempo di un intero set di sensori (tutti appartenenti alla solita classe).
 
-%esempio di triple rdf 
+\begin{figure}[!h]
+	\centering
+	\includegraphics[height=5.5cm]{img/triplerdf2.png}
+\caption{\emph{Esempio di un set di triple RDF, per motivi di rappresentazione grafica la stringa} \texttt{http://www.disit.org/km4city} \emph{è stata sostituita con * }}
+\end{figure}
 
-Nell'immagine d'esempio sono mostrati due esempi di simulazioni relativi a due sensori distinti appartenenti alla solita classe (classe dei sensori di parcheggio). 
+Nell'immagine d'esempio sono mostrati due esempi di simulazioni relativi a due sensori distinti appartenenti alla solita classe (classe dei sensori del traffico). 
 Ogni processo di simulazione genera un blocco di triple per ogni sensore appartenente ad un set predefinito (la lista dei sensori è il
 risultato di un'interrogazione nella base dati RDF).
-\subsubsection{Struttura delle Triple}
+\subsection{Struttura delle Triple}
 Le triple che compongono il file di uscita, come vedremo, hanno tutte la medesima struttura di conseguenza è stato possibile implementare un algoritmo in grado di valorizzare
 i tre parametri della tripla (\emph{soggetto, predicato, oggetto}) in modo automatico, a partire da alcuni parametri iniziali.\\
 Il blocco di triple che descrivono il sensore è composto da classi, attributi della classe e riferimenti ad altre classi.\\
-Nell'esempio è riportato un blocco di triple suddiviso per classi. Ogni classe possiede obbligatoriamente l'attributo \texttt{http://www.w3.org/1999/02/22-rdf-syntax-ns\#type} che identifica la classe alla quale appartiene quella risorsa.
+Nell'esempio è riportato un blocco di triple suddiviso per classi. Ogni classe possiede obbligatoriamente l'attributo\\ \texttt{http://www.w3.org/1999/02/22-rdf-syntax-ns\#type} che identifica la classe alla quale appartiene quella risorsa.
 Un altro attributo obbligatorio è \texttt{http://purl.org/dc/terms/identifier} il valore di questo attributo identifica l'id dell'istanza (o risorsa) dell'oggetto della classe in questione.
 Le altre triple della classe infine, rappresentano proprietà della classe oppure sono riferimenti ad istanze (o risorse) di altre classi.
+\begin{figure}[!h]
+	\begin{subfigure}{1\textwidth}
+		\centering
+		\includegraphics[width=14cm]{img/triple.png}
+		\caption{Esempio di triple suddivise per classi RDF}\label{triplerdf}
+	\end{subfigure}
+	\begin{subfigure}{1\textwidth}
+		\centering
+		\includegraphics[width=14cm]{img/schema.png}
+		\caption{Schema delle classi RDF riferite alle tripre dell'esempio precedente}\label{schema}
+	\end{subfigure}
+	\caption{Triple e schema delle classi RDF}\label{rdfcombo}
+\end{figure}
+Nelle due immagini precedenti è mostrata la struttura di un esempio di triple RDF utilizzate per descrivere l'informazione relativa ad un sensore di traffico. Il tutto è composto da 3 classi ognuna di esse è identificata come una risorsa tramite un identificativo, per ogni risorsa della classe sono specificati tutti i suoi attributi mentre i riferimenti verso le altre classi (le frecce tratteggiate nello schema \ref{schema}) contengono come valore l'id della risorsa alla quale fanno riferimento. 
+\newpage
 
-\subsection{Il File di Configurazione}
-In base a quanto visto nel paragrafo precedente, è possibile implementare un algoritmo in grado di generare in modo sistematico una simulazione della campionatura in ordine ad un qualsiasi  
-sensore già definito all'interno dell'ontologia.
+\section{Il File di Configurazione}
+In base a quanto detto nel paragrafo precedente, è stato implementato  un algoritmo in grado di generare in modo sistematico una simulazione della campionatura in ordine ad un qualsiasi  sensore già definito all'interno dell'ontologia.
 Questa simulazione è ottenuta a partire da un file nel quale un utente esperto, cioè un utente che ha un'ampia conoscenza dell'ontologia di \emph{KM4City}, specifica come devono essere valorizzate le proprietà 
 delle classi che definiscono il sensore. Tale file è scritto con la sintassi \emph{XML}.
 
-\subsubsection{Struttura del file XML}
-A seguito è mostrata la struttura gerarchica dei nodi e delle loro proprietà che compongono il file di configurazione.\\
+\subsection{Struttura del file XML}
+A seguito è descritta la struttura gerarchica dei nodi e delle loro proprietà, che compongono il file di configurazione.\\
 
-% esempio semplice file n3 e file xml che lo definisce
-% spiegazione di massima dell'esempio
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=14cm]{img/configxml.png}
+	\caption{Estratto di un file di configurazione xml}\label{configxml}
+\end{figure}
 
-\paragraph{\large{<tree>}}
+\subsubsection{\large{<tree>}}
 \`E l'elemento radice ed ha le seguenti proprietà:
 \begin{itemize}
 	\item \textbf{typeId}: [Obbligatorio] Il suo valore indica l'\texttt{URI} da usare per indicare la tipologia della classe, in altre parole il valore del complemento della tripla 
@@ -145,15 +164,14 @@ A seguito è mostrata la struttura gerarchica dei nodi e delle loro proprietà c
 	\item \textbf{isStateful} [Opzionale] Se true crea un file \emph{json} con tutti i valori dell'ultima esecuzione. Tale file può essere riutilizzato in esecuzioni successive per tenere conto dei valori 
 	precedentemente generati (le specifiche di questa funzionalità sono descritte a seguire nel paragrafo relativo alla tipologia \textbf{previusstate}). 
 \end{itemize}
-\paragraph{\large{<fileInfo>}}
+\subsubsection{\large{<fileInfo>}}
 Questo elemento definisce le specifiche del file di uscita, deve contenere i seguenti elementi:
 \begin{itemize}
 	\item \textbf{FileName} [Obbligatorio] Specifica il nome del file \emph{.n3} d'uscita.
 	\item \textbf{StartDirectory} [Obbligatorio] \`E la cartella all'interno della quale verranno generati i file risultato della simulazione.
 \end{itemize}
-A partire dalla cartella specificata sarà creata un'alberatura di cartelle con il seguente formato: \texttt{AAAA\_MM\textbackslash GG\textbackslash HH\textbackslash mmss\textbackslash filename.n3}.
-Dove i simboli rappresentano i valori di data e e ora.
-\paragraph{\large{<instanceIterationQuery>}}
+A partire dalla cartella specificata sarà creata un'alberatura di cartelle con il seguente formato: \texttt{AAAA\_MM\textbackslash GG\textbackslash HH\textbackslash mmss\textbackslash filename.n3}, dove i simboli rappresentano i valori di data e e ora.
+\subsubsection{\large{<instanceIterationQuery>}}
 Elemento per la definizione di una query SPARQL. All'interno di questo elemento si specifica la query SPARQ i cui risultati sono utilizzati rappresentano la lista di sensori sui quali iterare.
 La query deve avere una struttura tale da restituire in uscita una lista di identificativi che rappresentano i sensori per i quali voglio generare delle simulazioni.\\
 Questo elemento non possiede proprietà ma deve aver valorizzati questi elementi:
@@ -162,6 +180,7 @@ Questo elemento non possiede proprietà ma deve aver valorizzati questi elementi
 	\item \textbf{server} [Obbligatorio] End-point a cui sottoporre la query
 	\item \textbf{bindingValue} [Opzionale] Campo della select su cui andare a recuperare il valore d'uscita (default = id)
 \end{itemize}
+
 \paragraph{\large{<iterationElement>}}
 \`E l'elemento che contiene le definizioni della struttura RDF e le regole di generazione dei valori del sensore. Per ogni elemento generato dalla query si
 rieffettua una generazione dei dati secondo le regole definite all'interno di questo elemento.\\
@@ -176,13 +195,13 @@ Questo oggetto contiene 2 tipologie di elementi:
 	le proprietà ad esse associate necessarie a definire l'intero oggetto (sensore) RDF. Le istanze contengono le informazioni necessarie a definire la tripla, inoltre ognuna di esse contiene 
 	una lista di proprietà dove per ognuna di esse sono definite oltre alle informazioni utili a generare la tripla anche le regole di generazione del valore del singolo attributo.
 \end{itemize} 
-\paragraph{\large{<istance>}}
+\subsubsection{\large{<istance>}}
 Elemento che definisce la struttura e gli attributi di un'istanza RDF.\\
 Proprietà:
 \begin{itemize}
 	\item \texttt{type}: valore dell'uri \emph{rdf-syntax-ns\#type} dell'istanza.
 	\item \texttt{name}: nome dell'istanza usato per referenziare l'istanza.
-	\item \texttt{isRoot}:se true indica se questa istanza contiene l'emento su cui inserire il valore generato dalla query.
+	\item \texttt{isRoot}:se true indica se questa istanza contiene l'elemento su cui inserire il valore generato dalla query.
 	\item \texttt{baseUri}: valore del \emph{baseURI} dell'istanza.
 \end{itemize}
 Elementi:
@@ -195,8 +214,8 @@ Contiene la lista delle proprietà dell'istanza.
 	\item \textbf{list<prop>} [Obbligatorio]
 \end{itemize}
 
-\paragraph{\large{<prop>}}
-Con questo elemento andiamo a definire le singole proprietà dell'istanza e come esse devono essere generate. Per ognuna di esse sono stati dei campi utili alla generazione dei valori della tripla RDF 
+\subsubsection{\large{<prop>}}
+Con questo elemento si definisce le singole proprietà dell'istanza e come esse devono essere generate. Per ognuna di esse sono stati dei campi utili alla generazione dei valori della tripla RDF 
 ed altri campi necessari alla generazione del valore dell'attributo in base al tipo con il quale è stato definito quell'attributo. Come vedremo in seguito è stato definito un set di tipi in cui un a proprietà può essere
 definita, ogni tipo necessita di ulteriori attributi definiti ad hoc per quella tipologia utili alla generazione del valore di uscita.\\
 Proprietà:
@@ -210,64 +229,72 @@ Elementi:
 \item \textbf{uri} [Obbligatorio]: valore dell'oggetto della tripla RDF.
 \end{itemize}
 
-\subsubsection{Lista Tipi}
+\subsection{Lista Tipi}
 La generazione dei valori può avvenire in molti modi: per cercare di offrire la maggiore capacità espressiva sono state implementate molteplici tipologie 
 per la generazione pseudo-casuale dei valori delle proprietà.
 Ognuno dei tipi sotto elencati può essere utilizzato come tipo di valore d'uscita per quella specifica proprietà basta specificarlo 
 nell'attributo \emph{type} con a seguito i parametri di cui necessita.\\
 
-\paragraph{\large{id}  Definisce che la proprietà dovrà contenere il valore proveniente dalla query di iterazione, 
+\subsubsection{\large{id}}  Definisce che la proprietà dovrà contenere il valore proveniente dalla query di iterazione, 
 questa proprietà deve essere attribuita all'istanza con \emph{isRoot = true}.\\
 Parametri aggiuntivi: Nessuno
-\paragrapg{\large{integer}} L'attributo restituirà un valore intero generato casualmente in un intervallo.\\
+\subsubsection{\large{integer}} L'attributo restituirà un valore intero generato casualmente in un intervallo.\\
 Parametri aggiuntivi:
 \begin{itemize}
 	\item \texttt{maxValue}: Estremo superiore dell'intervallo.
 	\item \texttt{minValue}: Estremo inferiore dell'intervallo.
 \end{itemize}
-\paragrapg{\large{float}} L'attributo restituirà un valore float generato casualmente in un intervallo.\\
+\subsubsection{\large{float}} L'attributo restituirà un valore float generato casualmente in un intervallo.\\
 Parametri aggiuntivi:
 \begin{itemize}
 	\item \texttt{maxValue}: Estremo superiore dell'intervallo.
 	\item \texttt{minValue}: Estremo inferiore dell'intervallo.
 \end{itemize}
-\paragraph{\large{id}  Genera un identificativo univoco\\
-Parametri aggiuntivi: Nessuno
-\paragraph{\large{md5}} Genera il valore md5 di una stringa\\
+\subsubsection{\large{md5}} Genera il valore md5 di una stringa\\
 Parametri aggiuntivi:
 \begin{itemize}
 	\item \texttt{md5String}: Contiene la stringa da crittografare
 \end{itemize}
-\paragraph{\large{datetime}} Genera una data in formato ISO 8601 se non specificati gli estremi dell'intervallo la data assume il valore dell'istante in cui è generata.\\
+\subsubsection{\large{datetime}} Genera una data in formato ISO 8601 se non specificati gli estremi dell'intervallo la data assume il valore dell'istante in cui è generata.\\
 Parametri aggiuntivi:
 \begin{itemize}
 	\item \texttt{maxValue}: Estremo superiore dell'intervallo.
 	\item \texttt{minValue}: Estremo inferiore dell'intervallo.
 \end{itemize}
-\paragrapg{\large{hourdependent}} Serve a generare dei valori diversi per ogni ora della giornata, in base ai valori orari di riferimento specificati.
+\subsubsection{\large{hourdependent}} Serve a generare dei valori diversi per ogni ora della giornata, in base ai valori orari di riferimento specificati.
 Parametri aggiuntivi:
 \begin{itemize}
 	\item \texttt{hourValue}: Contiene i valori di riferimento per ogni ora, devono essere inseriti 24 valori separati da ';'. 
 	\item \texttt{range}: Contiene il range di variazione all'interno del quale possiamo far variare il valore di riferimento, può essere un
 	valore unico per tutti e 24 i valori oppure può essere definito in modo analogo a hourValue indicando i 24 valori del range.
 \end{itemize}
-\paragraph{\large{profiledependent}} Con questa tipologia, che è concettualmente molto simile alla precedente, è possibile generare il valore di un attributo a partire da un set di profili definiti per specifici giorni della settimana con
-valori di riferimento campionati ad intervalli di 15 minuti. Questi valori sono specificati in 
+\subsubsection{\large{profiledependent}} Con questa tipologia, che è concettualmente molto simile alla precedente, è possibile generare il valore di un attributo a partire da un set di profili normalizzati (tra 0 - 1) definiti per specifici giorni della settimana con
+valori campionati ad intervalli di 15 minuti (96 campionature) che dovranno essere infine moltiplicati per un valore di riferimento. Questi valori sono specificati in file in formato \emph{.csv} che deve essere importato dal sistema.\\
+All'interno di un file \emph{.csv} possono essere definiti più di un profilo (e.g. ''consumo elettrico'', ''luce'', ''umidità''  ecc...) per ognuno di questi sono definiti i valori giornalieri di riferimento. La distinzione dei giorni può essere fatta specificando dei profili diversi per i diversi giorni della settimana oppure specificando un profilo \emph{any} valido per tutti i giorni per i quali non è definito un profilo. Come nel caso precedente anche qui dobbiamo definire un valore che specifica l'entità del rumore da aggiungere al valore di riferimento. Il valore finale è ottenuto quindi moltiplicando il valore ottenuto dal profilo in base all'orario per un valore di riferimento, tutto sommato con una perturbazione randomica di ampiezza specificata.
+Parametri aggiuntivi:
+\begin{itemize}
+	\item \texttt{profilesFile} Contiene il nome del file \emph{.csv} da utilizzare
+	\item \texttt{profileId} Indica quale è il profilo da considerare
+	\item \texttt{maxValue} Valore base di riferimento 
+	\item \texttt{variance} Valore della varianza 
+\end{itemize}  
 
-\paragraph{\large{fromset}} Estrae un valore a caso da un set di elementi (se il set contiene un solo elemento sarà estratto sempre quello).
+% esempio di file csv 
+
+\subsubsection{\large{fromset}} Estrae un valore a caso da un set di elementi (se il set contiene un solo elemento sarà estratto sempre quello).
 Parametri aggiuntivi:
 \begin{itemize}
 	\item \texttt{set} Lista di valori separati da ';'.
 \end{itemize}
-\paragraph{\large{query}} Il valore dell'attributo è il risultato dell'esecuzione di una query (la query deve restituire un solo valore).\\
+\subsubsection{\large{query}} Il valore dell'attributo è il risultato dell'esecuzione di una query (la query deve restituire un solo valore).\\
 \newline
 \emph{Elemento della stessa tipologia di \textbf{instanceIterationQuery}, con la sola differenza che in questo caso la query deve restituire un solo record e non una lista.}\\
-\paragrpah{\large{valueexpression}} Tipologia che permette di definire il valore di un attributo come risultato di una espressione logica o algebrica contenete variabili.
+\subsubsection{\large{valueexpression}} Tipologia che permette di definire il valore di un attributo come risultato di una espressione logica o algebrica contenete variabili.
 Parametri aggiuntivi:
 \begin{itemize}
 	\item \texttt{valueExpression} Contiene l'espressione algebrica o logica da eseguire, le variabili devono essere dichiarate con la seguente sintassi \$\{nome\} dove nome è il valore inserito nelle proprietà dell'attributo prop
 \end{itemize}
-\paragraph{\large{foregoing}} Attraverso questa tipologia si può andare a referenziare il valore di una variabile generata in passi precedenti all'interno della solita query di iterazione corrente.\\
+\subsubsection{\large{foregoing}} Attraverso questa tipologia si può andare a referenziare il valore di una variabile generata in passi precedenti all'interno della solita query di iterazione corrente.\\
 Lo scopo di questa tipologia è di permettere di referenziare all'interno di una iterazione un valore generato per un altro sensore sempre all'interno del solo ciclo di iterazione.\\
 Parametri aggiuntivi:
 \begin{itemize}
@@ -275,7 +302,7 @@ Parametri aggiuntivi:
 	\item \texttt{refValue}:contiene la coppia \emph{iterazione - nomeVaribile} da cui prendere il valore. Il valore di iterazione può essere sia un intero, che rappresenta l'indice dell'iterazione 
 	da cui prendere il valore, oppure l'id del sensore da cui prendere il valore interessato che viene specificato con la variabile nomeVariabile il tutto con questa sintassi: \@[iterazione]\{nomeVariabile\}.
 \end{itemize}
-\paragraph{\large{previusstate}} Questa tipologia ha un funzionamento simile alla precedente, solo che in questo caso si può andare a referenziare valori generati in esecuzioni precedenti e non all'interno della solita esecuzione.
+\subsubsection{\large{previusstate}} Questa tipologia ha un funzionamento simile alla precedente, solo che in questo caso si può andare a referenziare valori generati in esecuzioni precedenti e non all'interno della solita esecuzione.
 Questa tipologia è utile per generare i valori di quegli attributi che hanno che hanno una dipendenza funzionale da stati precedentemente generati. Per fare in modo di poter utilizzare questa tipologia è necessario che sia settato a true la proprietà 
 \emph{isStateful} nell'elemento \texttt{<tree>}, così facendo il programma creerà un dump, in un file esterno in formato json, delle variabili generate ad ogni esecuzione in modo da poter recuperare il valore interessato e poterlo
 utilizzare nell'iterazione corrente.
@@ -286,9 +313,8 @@ Parametri aggiuntivi:\\
 ogni iterazione contiene una lista sensore, quindi è necessario specificare a quale sensore si fa riferimento tramite l'\texttt{idSensore} ed infine è necessario specificare il \texttt{nome} della proprietà che si vuole ottenere.
 La sintassi da utilizzare per definire questa query di ricerca è la seguente: \#[indice][idSensore]\{nomeVariabile\}.\\
 	\end{itemize}
-
-
-\subsubsection{Variabili e Espressioni Algebriche}
+	
+\subsection{Variabili e Espressioni Algebriche}
 Talvolta accade che i valori di alcune proprietà abbiano delle dipendenze da altri valori e che ne si debba tenere conto durante la fase di generazione dei valori, oppure che un 
 determinato valore sia ottenuto tramite un'espressione algebrica.
 I valori che sono generati per le proprietà delle classi sono valori estratti casualmente, anche se ne viene definito l'intervallo all'interno del quale variare, sono pur sempre valori casuali. 
@@ -305,11 +331,9 @@ inserire espressioni algebriche.\\
 Per ogni proprietà definita è necessario specificare un nome, per referenziare quel valore all'interno di altre proprietà si deve utilizzare la seguente sintassi: \$\{\emph{Nome\_Proprietà}\}
 I valori nei quali è inserita una dipendenza funzionale saranno calcolati solo dopo aver generato tutte le loro dipendenze e nei casi in cui è necessario sarà possibile eseguire delle espressioni 
 per determinare il valore di alcune proprietà.
-
+\newpage
 %immagine di variabili e aspressioni alegbiche e spiegazione 
-
- 
-\subsection{L'applicativo Java}
+\section{L'applicativo Java}
 \end{document}
 %\subsection{Modellazione di Sistemi di Polling attraverso Reti di Petri Stocastiche}
 %L'uso di reti di Petri stocastiche per la modellazione di Sistemi di Polling è volto ad ottenere una misura esatta delle performance su classi di sistemi in cui la popolazione è finita e il tempo di arrivo e il tempo di servizio assumono distribuzioni esponenziali.\\ Queste limitazioni possono essere superate utilizzando una \emph{phase-type expansion} per distribuzioni non esponenziali e si può emulare la popolazione infinita usando un elevato numero di gettoni\cite{fixedpoint}. Le reti di Petri stocastiche sono un modo di semplificare, risolvere e generalizzare modelli di Markov. Lo spazio degli stati del modello Markov risultante è tuttavia generalmente grande e tende ad esplodere con l'aumentare delle stazioni e degli utenti in coda, tanto che la memoria necessaria per analizzare la matrice contente la catena di Markov sottostante alla rete di Petri può superare la capacità disponibile anche per piccoli modelli. Di conseguenza, l'uso di catene di Markov per la soluzioni di sistemi reali risulta computazionalmente intrattabile o potrebbe richiedere tempi di calcolo molto lunghi\cite{pollingsys}.\\
