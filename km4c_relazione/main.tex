@@ -171,6 +171,8 @@ Questo elemento definisce le specifiche del file di uscita, deve contenere i seg
 	\item \textbf{StartDirectory} [Obbligatorio] \`E la cartella all'interno della quale verranno generati i file risultato della simulazione.
 \end{itemize}
 A partire dalla cartella specificata sarà creata un'alberatura di cartelle con il seguente formato: \texttt{AAAA\_MM\textbackslash GG\textbackslash HH\textbackslash mmss\textbackslash filename.n3}, dove i simboli rappresentano i valori di data e e ora.
+
+
 \subsubsection{\large{<instanceIterationQuery>}}
 Elemento per la definizione di una query SPARQL. All'interno di questo elemento si specifica la query SPARQ i cui risultati sono utilizzati rappresentano la lista di sensori sui quali iterare.
 La query deve avere una struttura tale da restituire in uscita una lista di identificativi che rappresentano i sensori per i quali voglio generare delle simulazioni.\\
@@ -324,13 +326,13 @@ Un esempio è il caso dei sensori dei parcheggi,
 %immagine triple n3 con dipendenze 
 
 i quali restituiscono informazioni sulle statistiche di utilizzo delle strutture. Il valore principale che deve essere 
-generato casualmente è il \"numero di posti occupati\", di conseguenza valori come numero di posti liberi e percentuale di occupazione devono essere funzione del valore
+generato casualmente è il  ''numero di posti occupati'', di conseguenza valori come numero di posti liberi e percentuale di occupazione devono essere funzione del valore
 casuale generato in precedenza.\\
 Per risolvere questo tipo di problematiche è stata introdotta la possibilità di referenziare valori di proprietà già generati attraverso delle variabili e la possibilità di 
 inserire espressioni algebriche.\\
 Per ogni proprietà definita è necessario specificare un nome, per referenziare quel valore all'interno di altre proprietà si deve utilizzare la seguente sintassi: \$\{\emph{Nome\_Proprietà}\}
 I valori nei quali è inserita una dipendenza funzionale saranno calcolati solo dopo aver generato tutte le loro dipendenze e nei casi in cui è necessario sarà possibile eseguire delle espressioni 
-per determinare il valore di alcune proprietà.
+per determinare il valore di tali proprietà.
 \newpage
 %immagine di variabili e aspressioni alegbiche e spiegazione 
 \section{L'applicativo Java}
