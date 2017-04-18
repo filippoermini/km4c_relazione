@@ -449,12 +449,29 @@ Il progetto è composto da 4 componenti principali:\\
 	\newpage
 	\subsubsection{JSON} 
 	Questo formato è utilizzato per gestire il caso dell'esecuzioni con memoria; se la proprietà \texttt{isStateful} del nodo \texttt{tree} è settata a \emph{true} si attiva la generazione dei file \texttt{JSON} contenti un \emph{dump} dell'esecuzione appena generata, ognuno di questi file viene salvato insieme al file \texttt{.n3} per poi essere importato all'interno di esecuzioni successive in modo da mettere a disposizione dell'esecuzione corrente anche lo stato assunto da esecuzioni precedenti.\\
+	Per gestire i file di questo tipo in Java è stata utilizzata la libreria
+	esterna GSON\footnote{Gson is a Java library that can be used to convert Java
+	Objects into their JSON representation - \url{https://github.com/google/gson}}.
 	\begin{figure}[h!]
 		\centering
 		\includegraphics[height=5cm]{img/json.png}
 		\caption{Class Diagram della classe per la gestione dei file json}\label{jsonClass}
 	\end{figure}
-	La classe \texttt{States} contiene 
+	Queste classi sono state definite per poter creare un \emph{dump} di una
+	esecuzione in un file \emph{json}. I valori relativi ad un singolo sensore sono
+	inseriti all'interno di una lista di coppie <nome_proprietà,valore> tutto
+	all'interno di un oggetto di tipo \texttt{State}. Questo oggetto contiene i
+	dati relativi alla campionatura di un sensore, quindi per ogni sensore della
+	lista verrà generato un oggetto di tipo \texttt{State}. L'insieme di tutti
+	questi oggetti generati è inserito in una lista all'interno dell'oggetto della
+	classe \texttt{States}. Questo oggetto è quello che alla fine del processo, in
+	caso di esecuzione con memoria, è serializzato in un file \emph{json} tramite
+	le API GSON.\\
+	In modo duale nel momento in cui si devono importare le storicizzazioni
+	precedenti, si esegue una scansione all'interno della cartella, per importare
+	in modo ordinato, tutti i file \emph{json} precedemente creati. I file
+	importati sono inseriti in una lista di oggetti di tipo \texttt{States}.
+	
 	
 	
 
