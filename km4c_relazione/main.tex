@@ -271,7 +271,7 @@ Parametri aggiuntivi:
 	\item \texttt{range}: Contiene il range di variazione all'interno del quale possiamo far variare il valore di riferimento indicato. Può essere un
 	valore unico per tutti e 24 i valori oppure può essere definito in modo analogo a hourValue indicando i 24 valori del range.
 \end{itemize}
-\subsubsection{profiledependent} Con questa tipologia, che è concettualmente molto simile alla precedente, è possibile generare il valore di un attributo a partire da un set di profili normalizzati (tra 0 - 1) definiti per specifici giorni della settimana con
+\subsubsection{profiledependent} \label{profiledependent}Con questa tipologia, che è concettualmente molto simile alla precedente, è possibile generare il valore di un attributo a partire da un set di profili normalizzati (tra 0 - 1) definiti per specifici giorni della settimana con
 valori campionati ad intervalli di 15 minuti (96 campionature) che dovranno essere infine moltiplicati per un valore di riferimento. Questi valori sono specificati in file in formato \emph{.csv} che deve essere importato dal sistema.\\
 \begin{figure}[!h]
 	
@@ -449,17 +449,17 @@ Il progetto è composto da 4 componenti principali:\\
 	\newpage
 	\subsubsection{JSON} 
 	Questo formato è utilizzato per gestire il caso dell'esecuzioni con memoria; se la proprietà \texttt{isStateful} del nodo \texttt{tree} è settata a \emph{true} si attiva la generazione dei file \texttt{JSON} contenti un \emph{dump} dell'esecuzione appena generata, ognuno di questi file viene salvato insieme al file \texttt{.n3} per poi essere importato all'interno di esecuzioni successive in modo da mettere a disposizione dell'esecuzione corrente anche lo stato assunto da esecuzioni precedenti.\\
-	Per gestire i file di questo tipo in Java è stata utilizzata la libreria
-	esterna GSON\footnote{Gson is a Java library that can be used to convert Java
-	Objects into their JSON representation - \url{https://github.com/google/gson}}.
 	\begin{figure}[h!]
 		\centering
 		\includegraphics[height=5cm]{img/json.png}
 		\caption{Class Diagram della classe per la gestione dei file json}\label{jsonClass}
-	\end{figure}
+	\end{figure}\\
+	Per gestire i file di questo tipo in Java è stata utilizzata la libreria
+	esterna GSON\footnote{Gson is a Java library that can be used to convert Java
+		Objects into their JSON representation - \url{https://github.com/google/gson}}.
 	Queste classi sono state definite per poter creare un \emph{dump} di una
 	esecuzione in un file \emph{json}. I valori relativi ad un singolo sensore sono
-	inseriti all'interno di una lista di coppie <nome_proprietà,valore> tutto
+	inseriti all'interno di una lista di coppie \emph{<nome\_propriet\'a,valore>} tutto
 	all'interno di un oggetto di tipo \texttt{State}. Questo oggetto contiene i
 	dati relativi alla campionatura di un sensore, quindi per ogni sensore della
 	lista verrà generato un oggetto di tipo \texttt{State}. L'insieme di tutti
@@ -471,6 +471,18 @@ Il progetto è composto da 4 componenti principali:\\
 	precedenti, si esegue una scansione all'interno della cartella, per importare
 	in modo ordinato, tutti i file \emph{json} precedemente creati. I file
 	importati sono inseriti in una lista di oggetti di tipo \texttt{States}.
+	
+	\subsubsection{CSV}
+	Anche per questa tipologia di formato sono state definite delle classi atte alla gestione di questi file. Un file \emph{csv} è un file contenete dati in formato testo organizzati in colonne. La struttura delle colonne viene realizzata separando gli elementi di una riga attraverso una virgola.\\
+	Questa tipologia di file viene utilizzata nel tipo \texttt{profiledependent} (crf. capitolo \ref{profiledependent}), dove nella definizione della proprietà si specifica anche un file \emph{csv} esterno contenete valori di riferimento ad intervalli di 15 minuti organizzati con profili giornalieri. Un file \emph{csv} può contenere un profili relativi a più contesti (e.g. consumo elettrico, gas, acqua ecc.) e per di differenti giorni della settimana.
+		\begin{figure}[h!]
+			\centering
+			\includegraphics[height=4.5cm]{img/csv.png}
+			\caption{Class Diagram della classe per la gestione dei file csv}\label{csvClass}
+		\end{figure}\\
+	La classe Java che risponde a questa esigenza è la classe \texttt{CSVProfiles}; la quale contiene, in una lista, l'insieme dei diversi contesti presenti all'interno del file \emph{csv}.
+	Ogni elemento della lista è un oggetto della classe \texttt{Profiles} la quale contiene tutti i profili giornalieri definiti per un contesto.\\ I profili giornalieri sono organizzati in giorno della settimana e l'array dei \emph{timeSlot} contenente i 96 valori ( un valore ogni 15 minuti).\\
+	La manipolazione di questi dati è unilaterale, i dati sono solo letti non vi è una esportazione come nel caso del \emph{json}. L'importazione del file avviene leggendo il file, non sono utilizzate librerie esterne come nei precedenti casi.
 	
 	
 	
